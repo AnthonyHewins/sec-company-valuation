@@ -4,10 +4,16 @@ import (
 	"fmt"
 	"time"
 	"bytes"
+	"io"
+	"encoding/csv"
 
 	"net/http"
 	"io/ioutil"
 	"archive/zip"
+
+	"github.com/gocarina/gocsv"
+
+	"github.com/AnthonyHewins/sec-company-valuation/pkg/models"
 )
 
 const (
@@ -51,7 +57,17 @@ func ZIP(path string) (error) {
 }
 
 func unzip(r *zip.Reader) (error) {
-	var sub, tag, pre, num []byte
+	var tag []models.Tag
+	var sub []models.Sub
+	var pre []models.Pre
+	var num []models.Num
+
+	gocsv.SetCSVReader(func(in io.Reader) gocsv.CSVReader {
+		r := csv.NewReader(in)
+		r.Comma = '\t'
+		r.LazyQuotes = true
+		return r
+	})
 
 	for _, file := range r.File {
 		// TODO handle serialization of each file into structs
@@ -60,13 +76,25 @@ func unzip(r *zip.Reader) (error) {
 
 		switch file.Name {
 		case "sub.txt":
-			sub, err = readZipFile(file)
+			fmt.Println("sub")
+			err = readZipFile(file, func(r io.Reader) (error) {
+				return gocsv.Unmarshal(r, &sub)
+			})
 		case "tag.txt":
-			tag, err = readZipFile(file)
+			fmt.Println("tag.txt")
+			err = readZipFile(file, func(r io.Reader) (error) {
+				return gocsv.Unmarshal(r, &tag)
+			})
 		case "pre.txt":
-			pre, err = readZipFile(file)
+			fmt.Println("pre.txt")
+			err = readZipFile(file, func(r io.Reader) (error) {
+				return gocsv.Unmarshal(r, &pre)
+			})
 		case "num.txt":
-			num, err = readZipFile(file)
+			fmt.Println("num.txt")
+			err = readZipFile(file, func(r io.Reader) (error) {
+				return gocsv.Unmarshal(r, &num)
+			})
 		default:
 			// skip file
 		}
@@ -81,11 +109,11 @@ func unzip(r *zip.Reader) (error) {
 	return nil
 }
 
-func readZipFile(file *zip.File) ([]byte, error) {
-	f, err := file.Open()
-	if err != nil { return nil, err }
+func readZipFile(file *zip.File, fn func(r io.Reader) (error)) error {
+	fileReader, err := file.Open()
+	if err != nil { return err }
 
-	defer f.Close()
+	defer fileReader.Close()
 
-	return ioutil.ReadAll(f)
+	return fn(fileReader)
 }
