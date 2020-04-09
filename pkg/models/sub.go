@@ -26,15 +26,15 @@ type Sub struct{
 	Afs        *string    `csv:"afs"`
 	Wksi       *bool      `csv:"wksi"`
 	Fye        *string    `csv:"fye"`
-	Form       *string    `csv:"form"`
-	Period     *string    `csv:"period"`
-	Fy         *Year      `csv:"fy"`
-	Fp         *string    `csv:"fp"`
-	Filed      *string    `csv:"filed"`
+	Form       FormType   `csv:"form"`
+	Period     Date    `csv:"period"`
+	Fy         Year      `csv:"fy"`
+	Fp         *string       `csv:"fp"` // needs to be FPF
+	Filed      Date    `csv:"filed"`
 	Accepted   *string    `csv:"accepted"`
-	Prevrpt    *string    `csv:"prevrpt"`
-	Detail     *string    `csv:"detail"`
+	Prevrpt    bool      `csv:"prevrpt"`
+	Detail     bool      `csv:"detail"`
 	Instance   *string    `csv:"instance"`
-	Nciks      *string    `csv:"nciks"`
+	Nciks      *int       `csv:"nciks"`
 	Aciks      *string    `csv:"aciks"`
 }

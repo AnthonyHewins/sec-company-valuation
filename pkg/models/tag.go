@@ -7,7 +7,7 @@ type Tag struct{
 	Abstract bool   `csv:"abstract"`
 	Datatype string `csv:"datatype"`
 	Iord     string `csv:"iord"`
-	Crdr     string `csv:"crdr"`
+	Crdr     string `csv:"crdr"`  // 'c', 'd' or nil
 	Tlabel   string `csv:"tlabel"`
 	Doc      string `csv:"doc"`
 }
