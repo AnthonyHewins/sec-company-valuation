@@ -3,8 +3,8 @@
 SEC company valuation
 =====================
 
-Uses _[discounted cash flow
-(DCF)]__(https://www.investopedia.com/terms/d/dcf.asp) to evaluate a company's
+Uses [discounted cash flow
+(DCF)](https://www.investopedia.com/terms/d/dcf.asp) to evaluate a company's
 stock price.
 
 Makes use of the SEC's records of annual company filings to make a conservative
