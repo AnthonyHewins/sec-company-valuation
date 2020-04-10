@@ -7,7 +7,7 @@ type Num struct{
 	Ddate    Date      `csv:"ddate"`
 	Qtrs     int       `csv:"qtrs"`
 	Uom      string    `csv:"uom"`
-	Coreg    string       `csv:"coreg"` //needs to be int?
+	Coreg    string       `csv:"coreg"` // TODO needs to be int
 	Value    int     `csv:"value"`
 	Footnote string    `csv:"footnote"`
 }

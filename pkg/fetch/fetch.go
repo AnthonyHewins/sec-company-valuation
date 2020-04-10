@@ -20,7 +20,7 @@ const (
 	FINDATA = "https://www.sec.gov/files/dera/data/financial-statement-data-sets"
 )
 
-func SecURL(year, quarter int) (error) {
+func SecUrl(year, quarter int) (error) {
 	if quarter > 4 || quarter < 1 {
 		return fmt.Errorf("Quarter must be between 1 and 4")
 	}
@@ -29,10 +29,10 @@ func SecURL(year, quarter int) (error) {
 		return fmt.Errorf("Year must be greater than 2009 (SEC's records start then) and can't be in the future")
 	}
 
-	return URL(fmt.Sprintf("%s/%dq%d.zip", FINDATA, year, quarter))
+	return Url(fmt.Sprintf("%s/%dq%d.zip", FINDATA, year, quarter))
 }
 
-func URL(url string) (error) {
+func Url(url string) (error) {
 	resp, err := http.Get(url)
 	if err != nil { return err }
 
@@ -47,7 +47,7 @@ func URL(url string) (error) {
 	return unzip(r)
 }
 
-func ZIP(path string) (error) {
+func Zip(path string) (error) {
 	readerCloser, err := zip.OpenReader(path)
 	if err != nil { return err }
 
@@ -103,7 +103,7 @@ func unzip(r *zip.Reader) (error) {
 	}
 
 	if len(sub) == 0 || len(tag) == 0 || len(pre) == 0 || len(num) == 0 {
-		return fmt.Errorf("ZIP file is missing one of the files for DCF: need {sub, tag, pre, num}.txt")
+		return fmt.Errorf("ZIP file is missing one of the files for DCF, or it had length 0: need {sub, tag, pre, num}.txt")
 	}
 
 	return nil

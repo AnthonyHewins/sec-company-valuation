@@ -29,7 +29,7 @@ type Sub struct{
 	Form       FormType   `csv:"form"`
 	Period     Date    `csv:"period"`
 	Fy         Year      `csv:"fy"`
-	Fp         *string       `csv:"fp"` // needs to be FPF
+	Fp         *string       `csv:"fp"` // TODO probably needs to be FPF
 	Filed      Date    `csv:"filed"`
 	Accepted   *string    `csv:"accepted"`
 	Prevrpt    bool      `csv:"prevrpt"`
