@@ -1,15 +1,15 @@
 package fetch
 
 import (
-	"fmt"
-	"time"
 	"bytes"
-	"io"
 	"encoding/csv"
+	"fmt"
+	"io"
+	"time"
 
-	"net/http"
-	"io/ioutil"
 	"archive/zip"
+	"io/ioutil"
+	"net/http"
 
 	"github.com/gocarina/gocsv"
 
@@ -17,22 +17,27 @@ import (
 )
 
 const (
-	FINDATA = "https://www.sec.gov/files/dera/data/financial-statement-data-sets"
+	DeraUrl = "https://www.sec.gov/files/dera/data/financial-statement-data-sets"
 )
 
-func SecUrl(year, quarter int) (error) {
+var (
+	ErrQuarter = fmt.Errorf("Quarter must be between 1 and 4")
+	ErrYear = fmt.Errorf("Year must be greater than 2009 (SEC's records start then) and can't be in the future")
+)
+
+func SecUrl(year, quarter int) error {
 	if quarter > 4 || quarter < 1 {
-		return fmt.Errorf("Quarter must be between 1 and 4")
+		return ErrQuarter
 	}
 
 	if year < 2009 || year > time.Now().Year() {
-		return fmt.Errorf("Year must be greater than 2009 (SEC's records start then) and can't be in the future")
+		return ErrYear
 	}
 
-	return Url(fmt.Sprintf("%s/%dq%d.zip", FINDATA, year, quarter))
+	return Url(fmt.Sprintf("%s/%dq%d.zip", DeraUrl, year, quarter))
 }
 
-func Url(url string) (error) {
+func Url(url string) error {
 	resp, err := http.Get(url)
 	if err != nil { return err }
 
@@ -47,7 +52,7 @@ func Url(url string) (error) {
 	return unzip(r)
 }
 
-func Zip(path string) (error) {
+func Zip(path string) error {
 	readerCloser, err := zip.OpenReader(path)
 	if err != nil { return err }
 
@@ -56,7 +61,7 @@ func Zip(path string) (error) {
 	return unzip(&readerCloser.Reader)
 }
 
-func unzip(r *zip.Reader) (error) {
+func unzip(r *zip.Reader) error {
 	var tag []models.Tag
 	var sub []models.Sub
 	var pre []models.Pre

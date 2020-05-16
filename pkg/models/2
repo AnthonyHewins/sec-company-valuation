@@ -39,7 +39,7 @@ const (
 
 type FormType uint16
 
-func parseFormType(csv string) (FormType, error) {
+func ParseFormType(csv string) (FormType, error) {
 	switch csv {
 	case "AM":     return TenKT, nil
 
