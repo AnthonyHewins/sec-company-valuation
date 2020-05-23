@@ -1,0 +1,5 @@
+**/.git
+**/testdata
+**/migrations
+README.md
+*test.go
